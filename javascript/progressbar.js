@@ -1,5 +1,5 @@
 // code related to showing and updating progressbar shown as the image is being made
-
+let lastTimeSuccess = 0; //epoch time in second
 function rememberGallerySelection() {
 
 }
@@ -50,13 +50,23 @@ function setTitle(progress) {
 
     if (opts.show_progress_in_title && progress) {
         title = '[' + progress.trim() + '] ' + title;
+        lastTimeSuccess = getCurTimeInSeconds();
     }
-
+    else{
+        var curTime = getCurTimeInSeconds();
+        if (lastTimeSuccess !== 0 && curTime - lastTimeSuccess >= 150){
+            var durationSinceLastSuccess = curTime - lastTimeSuccess;
+            title = 'warning ' + durationSinceLastSuccess + 's';
+        }
+    }
     if (document.title != title) {
         document.title = title;
     }
 }
 
+function getCurTimeInSeconds(){
+    return Math.floor(Date.now() / 1000);
+}
 
 function randomId() {
     return "task(" + Math.random().toString(36).slice(2, 7) + Math.random().toString(36).slice(2, 7) + Math.random().toString(36).slice(2, 7) + ")";
